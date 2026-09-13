@@ -8,6 +8,7 @@
 
 > **Machine translation notice** — this document is an AI translation of the Chinese
 > [README.md](README.md). Where the two disagree, the Chinese version is authoritative.
+<!-- readme-source-sha256: 86ce1f6d08c32fe392b90710072ad855868d854224027f51846c9b1c5aee1c32 -->
 
 A **QR-race** tool for MiHoYo game live streams — Windows desktop client.
 
