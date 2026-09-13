@@ -8,7 +8,7 @@
 
 > **Machine translation notice** — this document is an AI translation of the Chinese
 > [README.md](README.md). Where the two disagree, the Chinese version is authoritative.
-<!-- readme-source-sha256: 1d641d3a9d8df9f007e702dcfc8e38d3877283e64ca687e14a536c62af240328 -->
+<!-- readme-source-sha256: bca60971a5d2e48ec5ce17025c758d40ca59197b3810640d5bde51b1e0a27f0a -->
 
 A scan-to-log-in / **QR-race** tool for MiHoYo games — Windows desktop client.
 
@@ -29,13 +29,13 @@ This tool is essentially a third-party client for Miyoushe's scan log-in feature
 - log into a MiHoYo passport with an account password or a phone verification code
 - approve logins as the Miyoushe mobile client — in principle the same job as the Miyoushe scanner
 - race several sources at once, e.g. several Bilibili live rooms and screen capture together
-- multi-account capability
 
 ## Roadmap
 
 1. An Android build
 2. Support for more live-streaming platforms
 3. Screen capture of a chosen **window**, and capturing **several windows at once**
+4. Multi-account capability (several accounts side by side, each source bound to its own account)
 
 ## Download & run
 
