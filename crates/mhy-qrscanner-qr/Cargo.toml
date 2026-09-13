@@ -1,0 +1,19 @@
+[package]
+name = "mhy-qrscanner-qr"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+mhy-qrscanner-mihoyo = { path = "../mhy-qrscanner-mihoyo" }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp", "bmp"] }
+rand.workspace = true
+reqwest.workspace = true
+rqrr = "0.7"
+serde.workspace = true
+serde_json.workspace = true
+url = "2"
+
+[dev-dependencies]
+tokio.workspace = true
+wiremock.workspace = true

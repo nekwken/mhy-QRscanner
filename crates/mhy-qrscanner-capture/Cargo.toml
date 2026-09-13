@@ -1,0 +1,18 @@
+[package]
+name = "mhy-qrscanner-capture"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+image = { version = "0.25", default-features = false, features = ["png"] }
+thiserror.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3", features = [
+    "errhandlingapi",
+    "windef",
+    "winnt",
+    "wingdi",
+    "winuser",
+] }

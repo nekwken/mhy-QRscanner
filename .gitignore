@@ -1,0 +1,56 @@
+# Rust
+target/
+**/*.rs.bk
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+pubspec.lock
+
+# IDE and local settings
+.idea/
+.vscode/
+*.iml
+
+# Secrets and runtime data
+.env
+.env.*
+*.pem
+*.p12
+*.pfx
+*.key
+*.jks
+*.keystore
+*.token
+*.session
+*.vault
+*.db
+*.sqlite
+*.sqlite3
+
+# Captures and analysis artifacts
+*.apk
+*.apks
+*.xapk
+*.so
+*.ko
+*.dll
+*.exe
+*.pdb
+*.har
+*.pcap
+*.pcapng
+*.hprof
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+Thumbs.db
+Desktop.ini

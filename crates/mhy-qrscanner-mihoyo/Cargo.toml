@@ -1,0 +1,21 @@
+[package]
+name = "mhy-qrscanner-mihoyo"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+async-trait.workspace = true
+base64 = "0.22"
+md-5.workspace = true
+rand.workspace = true
+reqwest.workspace = true
+rsa = "0.9"
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+url = "2"
+
+[dev-dependencies]
+tokio.workspace = true
+wiremock.workspace = true

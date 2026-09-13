@@ -1,0 +1,29 @@
+# `flutter_rust_bridge_codegen generate` reads this file. Run it from the
+# repository root:
+#
+#   flutter_rust_bridge_codegen generate
+#
+# Regenerate after changing any public item under `crates/mhy-qrscanner-bridge/src/api`.
+# Paths are relative to this file and must not contain `..`: the generator
+# derives module paths from them and fails on a non-normalised path.
+#
+# `rust_output` is deliberately omitted. The generator canonicalises `rust_root`
+# (which adds the Windows `\\?\` verbatim prefix) but not an explicit
+# `rust_output`, then strips one prefix off the other — supplying it fails with
+# "When compute_mod_from_rust_path ... prefix not found". The default is
+# `<crate>/src/frb_generated.rs`, which is where the file belongs anyway.
+#
+# The generated files are committed:
+#   crates/mhy-qrscanner-bridge/src/frb_generated.rs
+#   crates/mhy-qrscanner-bridge/src/frb_generated.io.rs
+#   crates/mhy-qrscanner-bridge/src/frb_generated.web.dart
+#   app/lib/src/rust/**
+# Never edit them by hand.
+#
+# The generator auto-inserts `mod frb_generated;` into `lib.rs`. It must stay
+# *after* the `//!` module docs or the crate stops compiling — check that line
+# after every regeneration.
+
+rust_input: crate::api
+rust_root: crates/mhy-qrscanner-bridge
+dart_output: app/lib/src/rust
