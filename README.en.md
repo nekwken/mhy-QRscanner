@@ -1,4 +1,4 @@
-# mhy-QRscanner (米游抢码器)
+# mhy-QRscanner (米游扫码/抢码器)
 
 [中文](README.md) | **English** | [日本語](README.ja.md)
 
@@ -8,27 +8,34 @@
 
 > **Machine translation notice** — this document is an AI translation of the Chinese
 > [README.md](README.md). Where the two disagree, the Chinese version is authoritative.
-<!-- readme-source-sha256: 86ce1f6d08c32fe392b90710072ad855868d854224027f51846c9b1c5aee1c32 -->
+<!-- readme-source-sha256: 1d641d3a9d8df9f007e702dcfc8e38d3877283e64ca687e14a536c62af240328 -->
 
-A **QR-race** tool for MiHoYo game live streams — Windows desktop client.
+A scan-to-log-in / **QR-race** tool for MiHoYo games — Windows desktop client.
 
 > ⚠️ Use it only with **your own account and your own devices**.
 > Read [Scope & disclaimer](#scope--disclaimer) before using it.
 
 The idea: keep your MiHoYo passport session resident on a virtual device, capture QR codes from a
-**Bilibili live stream** and/or **your own screen**, and let the resident session approve them — so
-you can win the race faster and more conveniently.
+**Bilibili live stream**, **your own screen**, a **screenshot image** or a **QR link**, and let that
+resident session approve them — for a faster and more convenient scan login, whether you are racing
+for a code on a live stream or simply logging in without your phone.
 
 ![Scan page](docs/images/main.png)
 
 ## Features
 
-This tool is essentially a third-party client for Miyoushe's scan-to-log-in feature. It can:
+This tool is essentially a third-party client for Miyoushe's scan log-in feature. It can:
 
 - log into a MiHoYo passport with an account password or a phone verification code
-  (⚠️ getting an SMS code may require completing a human-verification step by hand)
 - approve logins as the Miyoushe mobile client — in principle the same job as the Miyoushe scanner
-- race several sources at once and approve whichever QR code appears first
+- race several sources at once, e.g. several Bilibili live rooms and screen capture together
+- multi-account capability
+
+## Roadmap
+
+1. An Android build
+2. Support for more live-streaming platforms
+3. Screen capture of a chosen **window**, and capturing **several windows at once**
 
 ## Download & run
 
@@ -58,7 +65,7 @@ Requirements:
 
    Enable or disable each source on its card in the **Sources** tab and pick its mode
    (scan only / scan and approve).
-3. **Race**: press “Start capture”. Once a QR is recognised it is approved automatically according to
+3. **Race**: press "Start capture". Once a QR is recognised it is approved automatically according to
    each source's mode, or a dialog asks you to confirm a second time.
 
 Command-line usage is described in [CLI](#cli).
@@ -71,10 +78,10 @@ regenerating the bindings).
 ```powershell
 # Builds the Rust release artifacts, then the Flutter Windows app, then places
 # mhy_qrscanner_bridge.dll next to mhy_QRscanner.exe (the app loads it from there).
-powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File app	ooluild_windows.ps1
 
 # Add this switch for a build with ffmpeg inside (ffmpeg.exe and its LICENSE land in Release):
-powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1 -BundleFfmpeg F:\ffmpeg\bin\ffmpeg.exe
+powershell -NoProfile -ExecutionPolicy Bypass -File app	ooluild_windows.ps1 -BundleFfmpeg F:fmpeginfmpeg.exe
 ```
 
 > The build script works through an ASCII junction, side-stepping Flutter's decoding problem with

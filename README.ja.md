@@ -1,4 +1,4 @@
-# mhy-QRscanner（米游抢码器）
+# mhy-QRscanner（米游扫码/抢码器）
 
 [中文](README.md) | [English](README.en.md) | **日本語**
 
@@ -8,16 +8,17 @@
 
 > **機械翻訳について** — この文書は中国語版 [README.md](README.md) を AI で翻訳したものです。
 > 内容に食い違いがある場合は中国語版が優先されます。
-<!-- readme-source-sha256: 86ce1f6d08c32fe392b90710072ad855868d854224027f51846c9b1c5aee1c32 -->
+<!-- readme-source-sha256: 1d641d3a9d8df9f007e702dcfc8e38d3877283e64ca687e14a536c62af240328 -->
 
-MiHoYo のゲームライブ配信向け**搶碼（QR レース）**ツール — Windows デスクトップクライアント。
+MiHoYo ゲームのスキャンログイン／**搶碼（QR レース）**ツール — Windows デスクトップクライアント。
 
 > ⚠️ **本人のアカウント・本人の端末**でのみ使用してください。
 > 使用前に[利用範囲と免責事項](#利用範囲と免責事項)をお読みください。
 
-仕組み：MiHoYo 通行証のセッションを仮想デバイスに常駐させ、**Bilibili のライブ配信**や
-**自分の画面**から QR コードを取り込み、その常駐セッションで承認します。より速く、より手軽に
-搶碼（レース）に勝つためのツールです。
+仕組み：MiHoYo 通行証のセッションを仮想デバイスに常駐させ、**Bilibili のライブ配信**・
+**自分の画面**・**スクリーンショット画像**・**QR リンク**から QR コードを取り込み、その常駐
+セッションで承認します。配信での搶碼にも、スマホが手元にないときのスキャンログインにも、
+より速く便利に使えるようにするためのツールです。
 
 ![スキャンページ](docs/images/main.png)
 
@@ -26,10 +27,16 @@ MiHoYo のゲームライブ配信向け**搶碼（QR レース）**ツール �
 このツールは本質的に、米游社のスキャンログイン機能のサードパーティクライアントです。
 
 - アカウントのパスワードまたは携帯の認証コードで MiHoYo 通行証にログインできます
-  （⚠️ 認証コードの取得には手動での人機認証が必要になる場合があります）
 - ログイン後は米游社モバイルクライアントとしてログインを承認できます。原理的には米游社の
   スキャナ機能と同じです
-- 複数のソースから同時に搶碼し、最初に QR コードが現れたログインを承認します
+- 複数のソースから同時に搶碼できます（例：複数の Bilibili 配信部屋と画面キャプチャを同時に）
+- マルチアカウント対応
+
+## 今後の開発計画
+
+1. Android 版のビルド
+2. 対応ライブ配信プラットフォームの追加
+3. 画面キャプチャで**指定したウィンドウ**の取り込み、および**複数ウィンドウの同時取り込み**
 
 ## ダウンロードと実行
 
@@ -72,10 +79,10 @@ MiHoYo のゲームライブ配信向け**搶碼（QR レース）**ツール �
 ```powershell
 # Rust の release 成果物をビルドし、次に Flutter Windows アプリをビルドして、
 # mhy_qrscanner_bridge.dll を mhy_QRscanner.exe の隣に配置します（アプリはそこから読み込みます）。
-powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File app	ooluild_windows.ps1
 
 # ffmpeg を同梱する場合はこのスイッチを追加（ffmpeg.exe と LICENSE が Release に入ります）：
-powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1 -BundleFfmpeg F:\ffmpeg\bin\ffmpeg.exe
+powershell -NoProfile -ExecutionPolicy Bypass -File app	ooluild_windows.ps1 -BundleFfmpeg F:fmpeginfmpeg.exe
 ```
 
 > ビルドスクリプトは ASCII ジャンクション経由で動作し、Flutter の非 ASCII パス問題を回避します。
