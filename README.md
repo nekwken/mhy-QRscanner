@@ -30,15 +30,21 @@
 
 ## 下载与运行
 
-从 [Releases](https://github.com/nekwken/mhy-QRscanner/releases) 下载最新的
-`mhy-QRscanner-v<版本>-windows-x64.zip`，解压后运行 `mhy_QRscanner.exe`，免安装。
+从 [Releases](https://github.com/nekwken/mhy-QRscanner/releases) 下载 Windows x64 压缩包，
+解压后运行 `mhy_QRscanner.exe`，免安装。发行包有两个版本：
+
+| 版本 | 文件名 | 说明 |
+|---|---|---|
+| 精简版 | `mhy-QRscanner-v<版本>-windows-x64.zip` | 需要系统里已有 ffmpeg |
+| **内置 ffmpeg** | `mhy-QRscanner-v<版本>-windows-x64-with-ffmpeg.zip` | 解压即用，直播拉流无需自备 ffmpeg |
 
 运行要求：
 
 - Windows 10/11 x64
-- 使用 B 站直播源时需要 [ffmpeg](https://ffmpeg.org/download.html)：加入 `PATH`，
-  或设置环境变量 `MHYQR_FFMPEG` 指向其路径
-  （仅用屏幕监控 / 截图文件 / 二维码链接时不需要）
+- 使用 B 站直播源需要 [ffmpeg](https://ffmpeg.org/download.html)。解析顺序：
+  `MHYQR_FFMPEG` 环境变量 → 程序同目录的 `ffmpeg.exe`（内置版发行包）→ `PATH` 上的
+  `ffmpeg`（仅用屏幕监控 / 截图文件 / 二维码链接时不需要 ffmpeg）
+- 内置版携带的 ffmpeg 为 LGPL 构建（BtbN/FFmpeg-Builds），附 `FFMPEG-LICENSE.txt`
 
 ## 快速上手
 
@@ -63,6 +69,9 @@
 # 先构建 Rust release 产物，再构建 Flutter Windows 应用，
 # 并把 mhy_qrscanner_bridge.dll 放到 mhy_QRscanner.exe 旁（应用从那里加载）。
 powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1
+
+# 需要内置 ffmpeg 的发行包时追加参数（ffmpeg.exe 与其 LICENSE 会一并放进 Release 目录）：
+powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1 -BundleFfmpeg F:\ffmpeg\bin\ffmpeg.exe
 ```
 
 > 构建脚本通过 ASCII junction 工作，绕过 Flutter Windows 构建对非 ASCII 路径的解码问题；
