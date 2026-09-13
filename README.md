@@ -1,5 +1,7 @@
 # 米游抢码器（mhy-QRscanner）
 
+**中文** | [English](README.en.md) | [日本語](README.ja.md)
+
 [![Release](https://img.shields.io/github/v/release/nekwken/mhy-QRscanner?label=Release)](https://github.com/nekwken/mhy-QRscanner/releases)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
