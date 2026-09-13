@@ -1,4 +1,4 @@
-# 米游抢码器（mhy-QRscanner）
+# 米游扫码/抢码器（mhy-QRscanner）
 
 **中文** | [English](README.en.md) | [日本語](README.ja.md)
 
@@ -6,14 +6,14 @@
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-米哈游游戏直播**抢码**工具 — Windows 桌面客户端
+米哈游游戏扫码登陆/直播**抢码**工具 — Windows 桌面客户端
 
 > ⚠️ 本工具仅限**本人账号、本人设备**使用
 > 使用前请阅读[使用范围与免责声明](#使用范围与免责声明)。
 
 
 本工具原理是把你的米哈游通行证会话常驻在一个虚拟设备上，通过 **B 站直播流**和/或**本机屏幕**
-等方式捕获二维码并由这个虚拟设备上的会话批准，以期实现更快更方便的抢码
+等方式捕获二维码并由这个虚拟设备上的会话批准，以期实现更快更方便的扫码登陆，可以用于直播抢码或者手机不在身边时的扫码登陆
 
 ![扫码页](docs/images/main.png)
 
