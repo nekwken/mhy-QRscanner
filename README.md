@@ -1,143 +1,139 @@
 # 米游抢码器（mhy-QRscanner）
 
-**米游直播抢码工具** — Windows desktop client, Rust protocol core with a Flutter Windows shell,
-built for **抢码**:
-when a streamer shows a game login QR on stream (viewer services: first scan wins), the tool
-races to approve it with the operator's **own** resident passport session — Bilibili live-stream
-capture and/or local screen monitoring feed the decode pipeline, and the approval
-(panda → scanQRLogin → confirmQRLogin) lands far faster than any manual phone.
+[![Release](https://img.shields.io/github/v/release/nekwken/mhy-QRscanner?label=Release)](https://github.com/nekwken/mhy-QRscanner/releases)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-One MiHoYo passport account maps to one virtual device profile; after one login the session sits
-resident and every future approval is a single programmatic action.
+米哈游直播**抢码**工具 — Windows 桌面客户端，Rust 协议核心 + Flutter 界面。
 
-## 使用范围与免责声明
-
-- 仅用于**本人账号、本人设备**：工具只使用你本人登录的米哈游通行证会话，只批准它自己从画面中
-  读到的二维码，不接触、不代管任何他人凭证。
-- **不绕过任何风控**：图形验证（极验/aigis）只会弹出官方组件由你手动完成；工具不做、也不包含
-  任何验证码破解或风控规避逻辑。
-- 密码仅在当次请求中使用（环境变量读入，不落盘、不写日志）；短信验证码始终由你手动输入。
-- 使用本工具可能违反游戏或平台的服务条款，由此产生的账号风险与一切后果由使用者自行承担；
-  本项目仅供学习与研究，请遵守所在地区的法律法规。
+> ⚠️ 本工具仅限**本人账号、本人设备**使用，且不包含任何验证码破解或风控绕过逻辑。
+> 使用前请阅读[使用范围与免责声明](#使用范围与免责声明)。
 
 
-## Status
+本工具把你的米哈游通行证会话常驻在 PC 端的虚拟设备上，通过 **B 站直播流**和/或**本机屏幕**
+捕获二维码，在它出现的瞬间程序化完成 扫码 → 确认，速度远快于手动掏手机。
 
-Core is feature-complete for the Genshin CN scan/approval path, and the Flutter shell on top of it is
-packaged, tested and running. **New here? Read `docs/HANDOVER.md` first** — environment setup,
-verified build commands, what is live-verified vs only unit tested, and the known traps.
+一个通行证账号对应一个虚拟设备档案；登录一次后常驻待命，之后每次批准都是一次程序化动作。
 
-- Rust workspace root: repository root (`Cargo.toml`, `crates/`); Flutter app in `app/`.
-- Toolchain: Rust 1.98.1, Flutter 3.47.3, `flutter_rust_bridge` 2.13.0.
-- Tests: `cargo test --workspace` **120 pass**; `flutter test` **11 pass** (13 FFI cases need the
-  release cdylib; see `docs/HANDOVER.md` §4).
+![扫码页——本机屏幕与直播间同场竞速](docs/images/main.png)
 
-## What works today (live verified, own accounts only)
+## 功能
+
+
+- 以米游社移动客户端身份批准游戏二维码：panda → `scanQRLogin` → `confirmQRLogin`
+- 多源竞速：B 站直播拉流与本机屏幕捕获可同时抢码，每个源可独立设置
+
+- 密码登录、短信验证码登录；图形验证（极验/aigis）弹出官方组件由你手动完成
+- 每个通行证账号一个稳定的虚拟设备档案，首次登录自动建立
+- 凭据使用 Windows DPAPI 加密落盘；密码不落盘、不写日志
+- 审计日志记录每一次批准尝试（`audit.log`，NDJSON，1 MiB 轮转）
+
+## 下载与运行
+
+从 [Releases](https://github.com/nekwken/mhy-QRscanner/releases) 下载最新的
+`mhy-QRscanner-v<版本>-windows-x64.zip`，解压后运行 `mhy_QRscanner.exe`，免安装。
+
+运行要求：
+
+- Windows 10/11 x64
+- 使用 B 站直播源时需要 [ffmpeg](https://ffmpeg.org/download.html)：加入 `PATH`，
+  或设置环境变量 `MHYQR_FFMPEG` 指向其路径
+  （仅用屏幕监控 / 截图文件 / 二维码链接时不需要）
+
+## 快速上手
+
+1. **登录**：账号页用密码或短信验证码登录米哈游通行证。登录态失效时登录页会直接标出，重新登录即可。
+2. **配源**：扫码页有四个页签——
+   - **B站直播**：登记直播间（房间号 + 标签）；
+   - **本机屏幕**：监控整个屏幕；
+   - **截图文件 / 二维码链接**：一次性单路扫描。
+
+   在「源」页签的卡片上启用/停用各路源，并设置模式（仅扫描 / 扫描并批准）。
+3. **竞速**：点「开始捕获」。二维码被识别后，按各源的模式自动批准，或弹出确认框由你
+   点「批准登录」；结果在竞速面板与弹窗中展示。
+4. **设置**（可选）：调整批准策略、弹窗开关，开发者模式下可查看审计记录。
+
+命令行用法见 [CLI](#cli) 一节。
+
+## 从源码构建
+
+工具链：Rust 1.98.1，Flutter 3.47.3（`flutter_rust_bridge` 2.13.0 仅在重新生成绑定时需要）。
 
 ```powershell
-# 1. virtual device
+# 先构建 Rust release 产物，再构建 Flutter Windows 应用，
+# 并把 mhy_qrscanner_bridge.dll 放到 mhy_QRscanner.exe 旁（应用从那里加载）。
+powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1
+```
+
+> 构建脚本通过 ASCII junction 工作，绕过 Flutter Windows 构建对非 ASCII 路径的解码问题；
+> 手动命令与绑定重新生成见 `docs/HANDOVER.md` §4。
+
+## CLI
+
+```powershell
+# 1. 虚拟设备
 cargo run -p mhy-qrscanner-cli -- device create --account my-acct --template xiaomi14
 cargo run -p mhy-qrscanner-cli -- device register --account my-acct
 cargo run -p mhy-qrscanner-cli -- device show --account my-acct
 
-# 2. account login (password → SMS fallback → session activation → token exchange)
+# 2. 账号登录（密码 → 短信兜底 → 会话激活 → 票据交换）
 $env:MHYQR_PASSWORD = "..."
-cargo run -p mhy-qrscanner-cli -- auth login --account my-acct --login <phone>
+cargo run -p mhy-qrscanner-cli -- auth login --account my-acct --login <手机号>
 cargo run -p mhy-qrscanner-cli -- auth show --account my-acct
 
-# 3. approve a game QR (one-shot: URL or screenshot)
+# 3. 批准一个游戏二维码（一次性：链接或截图）
 cargo run -p mhy-qrscanner-cli -- qr login-game --account my-acct --image <screenshot.png>
 ```
 
-Verified end-to-end: PC-generated virtual device registers via `getExtList`/`getFp`; password and
-SMS login obtain a `stoken`; `scanQRLogin` + `confirmQRLogin` make the real Genshin PC client log in.
-A new-device risk challenge (`-3235`) is surfaced for **manual** completion — never bypassed.
+实测链路：PC 上生成的虚拟设备通过 `getExtList`/`getFp` 注册；密码与短信登录拿到
+`stoken`；`scanQRLogin` + `confirmQRLogin` 让真实的 PC 客户端完成登录。新设备风控质询
+（`-3235`）会呈现给用户**手动**完成。
 
-## Desktop app
 
-```powershell
-# Builds the Rust release binaries, then the Flutter Windows app, then places
-# mhy_qrscanner_bridge.dll next to mhy_QRscanner.exe (the app loads it from there).
-powershell -NoProfile -ExecutionPolicy Bypass -File app\tool\build_windows.ps1
-```
-
-`app\tool\build_windows.ps1` exists because Flutter's Windows build mis-decodes this workspace's
-non-ASCII path; it builds through an ASCII junction and sets `ProgramFiles(x86)`/`ProgramW6432` if the
-machine lacks them. See `docs/HANDOVER.md` §4 for the manual commands and for regenerating the
-`flutter_rust_bridge` bindings.
-
-## Target Stack
-
-- Flutter for the Windows desktop UI
-- Rust for protocol, device identity, storage, orchestration, and state machines
-- `flutter_rust_bridge` for the UI/core boundary via the `mhy-qrscanner-bridge` crate
-
-## Workspace layout
+## 仓库结构
 
 ```text
 crates/
-  mhy-qrscanner-core/     # domain models, errors
-  mhy-qrscanner-device/   # virtual device generation (5 templates) + registration
-  mhy-qrscanner-mihoyo/   # DS2 signing, RSA credentials, login/verify/exchange, x-rpc headers
-  mhy-qrscanner-qr/       # panda + passport QR, cookie building, local QR decode
-  mhy-qrscanner-capture/  # Windows GDI screen capture
-  mhy-qrscanner-store/    # DPAPI-encrypted local storage
-  mhy-qrscanner-cli/      # `mhyqr` binary
-  mhy-qrscanner-bridge/   # Flutter FFI surface (validates, masks, forwards)
-app/            # Flutter Windows shell
-  lib/src/screens/  # accounts / login / qr / settings / about
-  lib/src/rust/     # generated bindings — never edit by hand
+  mhy-qrscanner-core/     # 领域模型与错误
+  mhy-qrscanner-device/   # 虚拟设备生成（5 套模板）+ 注册
+  mhy-qrscanner-mihoyo/   # DS2 签名、RSA 凭据、登录/验证/票据交换、x-rpc 头
+  mhy-qrscanner-qr/       # panda + 通行证二维码、cookie 构建、本地二维码解码
+  mhy-qrscanner-capture/  # Windows GDI 屏幕捕获
+  mhy-qrscanner-store/    # DPAPI 加密存储
+  mhy-qrscanner-cli/      # `mhyqr` 命令行
+  mhy-qrscanner-bridge/   # Flutter FFI 边界（校验、脱敏、转发）
+app/            # Flutter Windows 外壳
+  lib/src/screens/  # 账号 / 登录 / 扫码 / 设置 / 关于
+  lib/src/rust/     # 生成的绑定——不要手改
   tool/build_windows.ps1
 docs/
-  HANDOVER.md   # start here: setup, build recipes, verification grades, traps
-flutter_rust_bridge.yaml  # codegen config; run the generator from here
+  HANDOVER.md   # 环境、构建配方、验证分级、已知坑（从这里开始）
+flutter_rust_bridge.yaml  # 代码生成配置
 ```
 
-## Scope
+## 调试环境变量
 
-Core race path (all implemented, live verified on Genshin CN / Star Rail CN):
-- Approve a game QR as a Miyoushe mobile client — panda scan → scanQRLogin → confirmQRLogin.
-- Multi-source monitoring in one race: Bilibili live-stream pull (ffmpeg) and/or local screen
-  capture, per-source mode (auto-approve vs scan-then-confirm), first stable QR wins.
-- Global ticket dedup: the same QR is approved at most once per 10 minutes.
-- Human-in-the-loop aigis: the official Geetest widget is served in an in-app page for the user to
-  complete; the tool only picks up the produced header and retries.
+正常使用不需要设置：
 
-Supporting path:
-- Password login and SMS verification-code login (aigis graphic captcha solved by the user).
-- One stable virtual device profile per passport account, auto-provisioned on first login;
-  raw profile management behind developer options.
-- Windows DPAPI encrypted device/session storage.
-- Audit log of every approval attempt (`audit.log`, plain NDJSON with 1 MiB rotation).
-- Adapters for other official titles (groundwork; Star Rail approved live via the shared path).
-
-Not pursued: generating a QR as the waiting client (the tool is always the scanner, not the
-streamer's game client).
-
-## Safety boundary
-
-The tool approves QRs with the operator's **own** passport session only — it never touches other
-people's credentials, and the account-ownership outcome is identical to a manual scan. It does
-**not** automate CAPTCHA or geetest bypass (the aigis challenge is completed by the user in a
-browser page), does not bypass account authorization, and does not evade platform risk controls.
-Passwords and SMS codes are never persisted — the password is read from an environment variable and
-used for a single request; SMS codes are read from stdin. Interactive challenges are always
-completed by the user.
-
-## Debug environment variables
-
-Not required on the happy path:
-
-| Variable | Purpose |
+| 变量 | 用途 |
 |---|---|
-| `MHYQR_DEBUG` | verbose diagnostics on stderr |
-| `MHYQR_PASSWORD` | password for `auth login` / `auth login-password` |
-| `MHYQR_SMS_CODE` | submit an already-received SMS code without re-sending |
-| `MHYQR_QR_CONFIRM=1` | legacy `qr scan`: also call `confirmQRLogin` |
-| `MHYQR_APP_ID`, `MHYQR_CLIENT_TYPE`, `MHYQR_GAME_BIZ` | override `x-rpc-*` identity |
-| `MHYQR_DEVICE_ID`, `MHYQR_DEVICE_FP`, `MHYQR_DEVICE_NAME`, `MHYQR_DEVICE_MODEL`, `MHYQR_SYS_VERSION` | override device identity |
-| `MHYQR_BRIDGE_DLL`, `MHYQR_CLI_EXE` | test-only: tell `flutter test` where the released cdylib and CLI are |
+| `MHYQR_DEBUG` | stderr 详细诊断 |
+| `MHYQR_PASSWORD` | `auth login` / `auth login-password` 的密码 |
+| `MHYQR_SMS_CODE` | 直接提交已收到的短信码，不再触发下发 |
+| `MHYQR_QR_CONFIRM=1` | 旧 `qr scan`：同时调用 `confirmQRLogin` |
+| `MHYQR_APP_ID` / `MHYQR_CLIENT_TYPE` / `MHYQR_GAME_BIZ` | 覆盖 `x-rpc-*` 身份 |
+| `MHYQR_DEVICE_ID` / `MHYQR_DEVICE_FP` / `MHYQR_DEVICE_NAME` / `MHYQR_DEVICE_MODEL` / `MHYQR_SYS_VERSION` | 覆盖设备身份 |
+| `MHYQR_FFMPEG` | 指定 ffmpeg 可执行文件路径 |
+| `MHYQR_BRIDGE_DLL` / `MHYQR_CLI_EXE` | 仅测试：告诉 `flutter test` release cdylib 与 CLI 的位置 |
 
-## License
+## 使用范围与免责声明
 
-MIT — see [LICENSE](LICENSE).
+- 仅用于**本人账号、本人设备**：工具只使用你本人登录的米哈游通行证会话，只批准它自己
+  从画面中读到的二维码
+- 密码仅在当次请求中使用（环境变量读入，不落盘、不写日志）；短信验证码由你手动输入。
+- 使用本工具可能违反游戏或平台的服务条款，由此产生的账号风险与一切后果由使用者自行
+  承担；本项目仅供学习与研究，请遵守所在地区的法律法规。
+
+## 许可证
+
+MIT — 见 [LICENSE](LICENSE)。
