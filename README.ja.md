@@ -2,13 +2,17 @@
 
 [中文](README.md) | [English](README.en.md) | **日本語**
 
+<p align="center">
+  <img src="docs/images/logo.png" width="128" alt="mhy-QRscanner logo">
+</p>
+
 [![Release](https://img.shields.io/github/v/release/nekwken/mhy-QRscanner?label=Release)](https://github.com/nekwken/mhy-QRscanner/releases)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **機械翻訳について** — この文書は中国語版 [README.md](README.md) を AI で翻訳したものです。
 > 内容に食い違いがある場合は中国語版が優先されます。
-<!-- readme-source-sha256: bca60971a5d2e48ec5ce17025c758d40ca59197b3810640d5bde51b1e0a27f0a -->
+<!-- readme-source-sha256: cb61ed84327950ac325f081cf95b694940f478704262e1b872d5d6a604bd6214 -->
 
 MiHoYo ゲームのスキャンログイン／**搶碼（QR レース）**ツール — Windows デスクトップクライアント。
 

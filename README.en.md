@@ -2,13 +2,17 @@
 
 [中文](README.md) | **English** | [日本語](README.ja.md)
 
+<p align="center">
+  <img src="docs/images/logo.png" width="128" alt="mhy-QRscanner logo">
+</p>
+
 [![Release](https://img.shields.io/github/v/release/nekwken/mhy-QRscanner?label=Release)](https://github.com/nekwken/mhy-QRscanner/releases)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Machine translation notice** — this document is an AI translation of the Chinese
 > [README.md](README.md). Where the two disagree, the Chinese version is authoritative.
-<!-- readme-source-sha256: bca60971a5d2e48ec5ce17025c758d40ca59197b3810640d5bde51b1e0a27f0a -->
+<!-- readme-source-sha256: cb61ed84327950ac325f081cf95b694940f478704262e1b872d5d6a604bd6214 -->
 
 A scan-to-log-in / **QR-race** tool for MiHoYo games — Windows desktop client.
 

@@ -2,6 +2,10 @@
 
 **中文** | [English](README.en.md) | [日本語](README.ja.md)
 
+<p align="center">
+  <img src="docs/images/logo.png" width="128" alt="mhy-QRscanner logo">
+</p>
+
 [![Release](https://img.shields.io/github/v/release/nekwken/mhy-QRscanner?label=Release)](https://github.com/nekwken/mhy-QRscanner/releases)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
